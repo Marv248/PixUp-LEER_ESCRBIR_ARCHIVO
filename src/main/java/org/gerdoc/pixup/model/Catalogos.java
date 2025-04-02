@@ -3,6 +3,7 @@ package org.gerdoc.pixup.model;
 import org.gerdoc.pixup.util.ReadUtil;
 
 import java.io.*;
+import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,6 +138,9 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
             objectInputStream.close( );
             fileInputStream.close( );
             System.out.println( "Archivo leido con exito");
+            for (T elemento : list) {
+                System.out.println(elemento);
+            }
         }
         catch (FileNotFoundException e)
         {
@@ -164,13 +168,16 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
             {
                 System.out.println( "No hay elementos para guardar");
             }
-            file = getFile( );
-            fileOutputStream = new FileOutputStream( file );
-            objectOutputStream = new ObjectOutputStream( fileOutputStream );
-            objectOutputStream.writeObject( list );
-            objectOutputStream.close( );
-            fileOutputStream.close( );
-            System.out.println( "Archivo guardado con exito");
+            else {
+                file = getFile();
+                fileOutputStream = new FileOutputStream(file);
+                objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                objectOutputStream.writeObject(list);
+                objectOutputStream.close();
+                fileOutputStream.close();
+                System.out.println("Archivo guardado con exito");
+                System.out.println("Ruta: " + file.getAbsolutePath());
+            }
         }
         catch (FileNotFoundException e)
         {
