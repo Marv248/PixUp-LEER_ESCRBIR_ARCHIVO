@@ -1,9 +1,7 @@
 package org.gerdoc.pixup.gui.consola;
 
 import org.gerdoc.pixup.model.LecturaAccion;
-import org.gerdoc.pixup.model.catalogos.ColoniaCatalogo;
-import org.gerdoc.pixup.model.catalogos.EstadoCatalogo;
-import org.gerdoc.pixup.model.catalogos.MunicipioCatalogo;
+import org.gerdoc.pixup.model.catalogos.*;
 import org.gerdoc.pixup.negocio.Ejecutable;
 
 public class ListaCatalogos extends LecturaAccion
@@ -28,7 +26,12 @@ public class ListaCatalogos extends LecturaAccion
         System.out.println( "1.-Estado");
         System.out.println( "2.-Municipio");
         System.out.println( "3.-Colonia");
-        System.out.println( "4.-Salir");
+        System.out.println( "4.-Disquera");
+        System.out.println( "5.-Cancion");
+        System.out.println( "6.-Disco");
+        System.out.println( "7.-Artista");
+        System.out.println( "8.-Genero Musical");
+        System.out.println( "9.-Salir");
     }
     @Override
     public int valorMinMenu()
@@ -39,7 +42,7 @@ public class ListaCatalogos extends LecturaAccion
     @Override
     public int valorMaxMenu()
     {
-        return 4;
+        return 9;
     }
 
     @Override
@@ -56,12 +59,32 @@ public class ListaCatalogos extends LecturaAccion
             case 3:
                 ejecutable = ColoniaCatalogo.getInstance();
                 break;
+            case 4:
+                ejecutable = DisqueraCatalogo.getInstance();
+                break;
+            case 5:
+                ejecutable = CancionCatalogo.getInstance();
+                break;
+            case 6:
+                ejecutable = DiscoCatalogo.getInstance();
+                break;
+            case 7:
+                ejecutable = ArtistaCatalogo.getInstance();
+                break;
+            case 8:
+                ejecutable = GeneroMusicalCatalogo.getInstance();
+                break;
+            case 9:
+                break;
             default:
                 System.out.println("Opción incorrecta");
                 return;
         }
-        ejecutable.setFlag( true );
-        ejecutable.run( );
+        if(ejecutable!=null)
+        {
+            ejecutable.setFlag(true);
+            ejecutable.run();
+        }
 
     }
 }
