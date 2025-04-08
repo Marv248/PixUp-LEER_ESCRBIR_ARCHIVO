@@ -1,15 +1,20 @@
 package org.gerdoc.pixup.gui.consola;
 
+import org.gerdoc.pixup.model.Catalogo;
+import org.gerdoc.pixup.model.Estado;
 import org.gerdoc.pixup.model.LecturaAccion;
 import org.gerdoc.pixup.model.catalogos.*;
 import org.gerdoc.pixup.negocio.Ejecutable;
 
 public class ListaCatalogos extends LecturaAccion
 {
+    protected Catalogo tipo_catalogo;
+
     public static ListaCatalogos listaCatalogos;
     private ListaCatalogos()
     {
     }
+
     public static ListaCatalogos getInstance( )
     {
         if(listaCatalogos==null)
@@ -73,8 +78,6 @@ public class ListaCatalogos extends LecturaAccion
                 break;
             case 8:
                 ejecutable = GeneroMusicalCatalogo.getInstance();
-                break;
-            case 9:
                 break;
             default:
                 System.out.println("Opción incorrecta");

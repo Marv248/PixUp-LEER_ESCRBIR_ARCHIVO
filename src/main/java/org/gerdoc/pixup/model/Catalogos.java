@@ -1,5 +1,8 @@
 package org.gerdoc.pixup.model;
 
+import org.gerdoc.pixup.gui.consola.ListaCatalogos;
+import org.gerdoc.pixup.jdbc.Conexion;
+import org.gerdoc.pixup.negocio.Ejecutable;
 import org.gerdoc.pixup.util.ReadUtil;
 
 import java.io.*;
@@ -9,6 +12,7 @@ import java.util.List;
 
 public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
 {
+    protected Conexion conexion;
     protected List<T>list;
     protected T t;
     protected boolean flag2;
@@ -37,15 +41,7 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
     public abstract boolean processNewT( T t );
     public abstract void processEditT( T t );
 
-    public void add( )
-    {
-        t = newT( );
-        if( processNewT( t ) )
-        {
-            t.setId( list.size( ) + 1 );
-            list.add( t );
-        }
-    }
+    public abstract void addRegistro();
 
     public void edit( )
     {
@@ -105,7 +101,7 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
         switch (opcion)
         {
             case 1:
-                add( );
+                addRegistro( );
                 break;
             case 2:
                 edit( );

@@ -1,5 +1,6 @@
 package org.gerdoc.pixup.model.catalogos;
 
+import org.gerdoc.pixup.jdbc.impl.ArtistaImpl;
 import org.gerdoc.pixup.model.Artista;
 import org.gerdoc.pixup.model.Catalogos;
 import org.gerdoc.pixup.util.ReadUtil;
@@ -9,6 +10,9 @@ import java.io.File;
 public class ArtistaCatalogo extends Catalogos<Artista> {
 
     public static ArtistaCatalogo artistaCatalogo;
+    private Artista artista = new Artista();
+    private ArtistaImpl artistaImpl = new ArtistaImpl();
+
     private ArtistaCatalogo( )
     {
         super();
@@ -44,6 +48,19 @@ public class ArtistaCatalogo extends Catalogos<Artista> {
         System.out.println("Artista a editar: " + artista.getNombre( ) );
         System.out.println("Teclee el nombre nuevo del artista: " );
         artista.setNombre( ReadUtil.read( ) );
+    }
+
+    @Override
+    public void addRegistro() {
+        System.out.println("Introduzca el nombre del Artista:");
+        this.artista.setNombre(ReadUtil.read());
+        if(this.artista.buscar(artista.getNombre())){
+            System.out.println("Lo siento, el artista "+ artista.getNombre()+" ya existe \u2639");
+        }
+        else {
+            artistaImpl.addRegistro(artista);
+            System.out.println("Registro realizado con exito!!!");
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.gerdoc.pixup.model.catalogos;
 
+import org.gerdoc.pixup.jdbc.impl.CancionImpl;
 import org.gerdoc.pixup.model.Cancion;
 import org.gerdoc.pixup.model.Catalogos;
 import org.gerdoc.pixup.util.ReadUtil;
@@ -9,6 +10,9 @@ import java.io.File;
 public class CancionCatalogo extends Catalogos<Cancion> {
 
     public static CancionCatalogo cancionCatalogo;
+    private Cancion cancion = new Cancion();
+    private CancionImpl cancionImpl = new CancionImpl();
+
     private CancionCatalogo( )
     {
         super();
@@ -44,6 +48,19 @@ public class CancionCatalogo extends Catalogos<Cancion> {
         System.out.println("Cancion a editar: " + cancion.getNombre( ) );
         System.out.println("Teclee el nombre nuevo del cancion: " );
         cancion.setNombre( ReadUtil.read( ) );
+    }
+
+    @Override
+    public void addRegistro() {
+        System.out.println("Introduzca el nombre de la canción:");
+        cancion.setNombre(ReadUtil.read());
+        if(cancion.buscar(cancion.getNombre())){
+            System.out.println("Lo siento, la canción "+cancion.getNombre()+" ya existe \u2639");
+        }
+        else {
+            cancionImpl.addRegistro(cancion);
+            System.out.println("Registro realizado de manera exitos");
+        }
     }
 
     @Override

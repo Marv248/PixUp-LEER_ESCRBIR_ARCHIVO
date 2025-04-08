@@ -1,5 +1,7 @@
 package org.gerdoc.pixup.model.catalogos;
 
+import org.gerdoc.pixup.jdbc.impl.DiscoImpl;
+import org.gerdoc.pixup.jdbc.impl.DisqueraImpl;
 import org.gerdoc.pixup.model.Cancion;
 import org.gerdoc.pixup.model.Catalogos;
 import org.gerdoc.pixup.model.Disco;
@@ -10,6 +12,9 @@ import java.io.File;
 public class DiscoCatalogo extends Catalogos<Disco> {
 
     public static DiscoCatalogo discoCatalogo;
+    private Disco disco = new Disco();
+    private DiscoImpl discoImpl = new DiscoImpl();
+
     private DiscoCatalogo( )
     {
         super();
@@ -45,6 +50,19 @@ public class DiscoCatalogo extends Catalogos<Disco> {
         System.out.println("Disco a editar: " + disco.getNombre( ) );
         System.out.println("Teclee el nombre nuevo del disco: " );
         disco.setNombre( ReadUtil.read( ) );
+    }
+
+    @Override
+    public void addRegistro() {
+        System.out.println("Ingrese el nombre del disco:");
+        this.disco.setNombre(ReadUtil.read());
+        if(disco.buscar(disco.getNombre())){
+            System.out.println("Lo siento, el disco " + disco.getNombre()+" ya existe \u2639");
+        }
+        else {
+            discoImpl.addRegistro(disco);
+            System.out.println("Registro realizado sin errores");
+        }
     }
 
     @Override

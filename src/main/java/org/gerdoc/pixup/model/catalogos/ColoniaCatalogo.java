@@ -1,13 +1,19 @@
 package org.gerdoc.pixup.model.catalogos;
 
+import org.gerdoc.pixup.jdbc.impl.ColoniaImp;
+import org.gerdoc.pixup.jdbc.impl.MunicipioImpl;
 import org.gerdoc.pixup.model.Catalogos;
 import org.gerdoc.pixup.model.Colonia;
+import org.gerdoc.pixup.model.Municipio;
 import org.gerdoc.pixup.util.ReadUtil;
 
 import java.io.File;
 
 public class ColoniaCatalogo extends Catalogos<Colonia> {
     public static ColoniaCatalogo coloniaCatalogo;
+    private Colonia colonia = new Colonia();
+    private ColoniaImp coloniaImp = new ColoniaImp();
+
     private ColoniaCatalogo( )
     {
         super();
@@ -43,6 +49,19 @@ public class ColoniaCatalogo extends Catalogos<Colonia> {
         System.out.println("Colonia a editar: " + colonia.getNombre( ) );
         System.out.println("Teclee el nombre nuevo de la nueva colonia: " );
         colonia.setNombre( ReadUtil.read( ) );
+    }
+
+    @Override
+    public void addRegistro() {
+        System.out.println("Introduzca el nombre del Municipio:");
+        this.colonia.setNombre(ReadUtil.read());
+        if(colonia.buscar(colonia.getNombre())){
+            System.out.println("Lo siento, la Colonia " + this.colonia.getNombre()+" ya existe \u2639");
+        }
+        else {
+            coloniaImp.addRegistro(colonia);
+            System.out.println("Colonia agregada con éxito");
+        }
     }
 
     @Override

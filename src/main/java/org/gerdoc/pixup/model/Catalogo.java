@@ -2,13 +2,10 @@ package org.gerdoc.pixup.model;
 
 import java.io.Serializable;
 
-public abstract class Catalogo implements Serializable
-{
+public abstract class Catalogo implements Serializable {
     protected Integer id;
 
-    public Catalogo()
-    {
-    }
+    public Catalogo() {}
 
     public Integer getId()
     {
@@ -26,4 +23,6 @@ public abstract class Catalogo implements Serializable
         return "Catalogo:\n" +
                 "\tid=" + id;
     }
+
+    public abstract boolean buscar(String nombre);
 }
