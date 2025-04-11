@@ -11,6 +11,12 @@ public class DisqueraCatalogo extends Catalogos<Disquera> {
     private Disquera disquera = new Disquera();
     private DisqueraImpl disqueraImpl = new DisqueraImpl();
     public static DisqueraCatalogo disqueraCatalogo;
+
+    @Override
+    public Integer buscarIdEnBD(Integer id) {
+        return 0;
+    }
+
     private DisqueraCatalogo( )
     {
         super();
@@ -59,6 +65,11 @@ public class DisqueraCatalogo extends Catalogos<Disquera> {
             disqueraImpl.addRegistro(disquera);
             System.out.println("Registro realizado sin errores");
         }
+    }
+
+    @Override
+    public void printAll() {
+        disqueraImpl.findAll();
     }
 
     @Override

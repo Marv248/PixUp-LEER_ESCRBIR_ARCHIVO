@@ -1,12 +1,13 @@
 package org.gerdoc.pixup.model;
 
-import org.gerdoc.pixup.gui.consola.ListaCatalogos;
 import org.gerdoc.pixup.jdbc.Conexion;
-import org.gerdoc.pixup.negocio.Ejecutable;
+import org.gerdoc.pixup.jdbc.impl.EstadoJdbcImpl;
 import org.gerdoc.pixup.util.ReadUtil;
 
 import java.io.*;
-import java.sql.ClientInfoStatus;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +18,36 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
     protected T t;
     protected boolean flag2;
     protected File file;
+    protected Catalogo catalogo = new Catalogo() {
+        @Override
+        public boolean buscar(String nombre) {
+            return false;
+        }
+
+        @Override
+        public Integer buscarById(Integer id) {
+            return 0;
+        }
+    };
+    protected Connection connection;
+
+    public abstract Integer buscarIdEnBD(Integer id);
 
     public Catalogos()
     {
         list = new ArrayList<>( );
+        if (conexion != null) {
+            connection = conexion.getConnection();
+        }
+        else {
+            this.conexion = new EstadoJdbcImpl();
+        }
+    }
+
+    protected void getConnection() {
+        if (connection == null) {
+            connection = conexion.getConnection();
+        }
     }
 
     public boolean isListEmpty()
@@ -42,32 +69,61 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
     public abstract void processEditT( T t );
 
     public abstract void addRegistro();
+    public abstract void printAll();
 
-    public void edit( )
-    {
-        if( isListEmpty( ) )
-        {
-            System.out.println( "No hay elementos" );
-            return;
+    public List<T> edit() {
+        getConnection();
+        List<T> lista = new ArrayList<>();
+        T entidad = newT();
+
+        if (!(entidad instanceof Catalogo)) {
+            System.out.println("El objeto no es una instancia válida de Catalogo.");
+            return lista;
         }
-        flag2 = true;
-        while ( flag2 )
-        {
-            System.out.println( "Ingrese el id del elemento a editar" );
-            print( );
-            t = list.stream().filter( e -> e.getId().equals( ReadUtil.readInt( ) ) ).findFirst().orElse( null );
-            if( t == null )
-            {
-                System.out.println( "Id incorrecto, intentelo nuevamente" );
+
+        Catalogo catalogoT = (Catalogo) entidad;
+
+        getConnection();
+        try {
+            System.out.println("Introduzca el id a modificar: ");
+            int id = ReadUtil.readInt();
+
+            Integer resultado = buscarIdEnBD(id);
+
+            if (resultado != null && resultado != -1) {
+                System.out.println("Introduzca el nuevo nombre: ");
+                String nuevoNombre = ReadUtil.read();
+
+                String nombreTabla = catalogoT.getNombreTabla();
+                String sql = "UPDATE " + nombreTabla + " SET nombre=? WHERE id=?";
+
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, nuevoNombre);
+                preparedStatement.setInt(2, id);
+
+                int filasActualizadas = preparedStatement.executeUpdate();
+                if (filasActualizadas > 0) {
+                    System.out.println("El registro fue actualizado exitosamente.");
+
+                    catalogoT.setId(id);
+                    catalogoT.setNombre(nuevoNombre);
+                    lista.add((T) catalogoT);
+                } else {
+                    System.out.println("No se actualizó ninguna fila.");
+                }
+            } else {
+                System.out.println("No se encontró un registro con el ID proporcionado.");
             }
-            else
-            {
-                processEditT( t );
-                flag2 = false;
-                System.out.println( "Elemento modificado" );
-            }
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar: " + e.getMessage());
+            e.printStackTrace();
         }
+
+        return lista;
     }
+
+
+
 
     public void remove( )
     {
@@ -104,19 +160,16 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
                 addRegistro( );
                 break;
             case 2:
-                edit( );
+                edit();
                 break;
             case 3:
                 remove( );
                 break;
             case 4:
-                print( );
+                printAll();
                 break;
             case 5:
-                guardarArchivo( );
-                break;
-            case 6:
-                leerArchivo( );
+                salir();
                 break;
         }
     }
@@ -153,6 +206,10 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
     }
 
     public abstract File getFile( );
+
+    private void salir(){
+        conexion.closeConnection();
+    }
 
     private void guardarArchivo()
     {
@@ -194,9 +251,7 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
         System.out.println("2.-Editar");
         System.out.println("3.-Borrar");
         System.out.println("4.-Imprimir");
-        System.out.println("5.-Guardar en archivo");
-        System.out.println("6.-Leer de archivo");
-        System.out.println("7.-Salir");
+        System.out.println("5.-Salir");
     }
 
     @Override
@@ -208,7 +263,7 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
     @Override
     public int valorMaxMenu()
     {
-        return 7;
+        return 5;
     }
 
 }

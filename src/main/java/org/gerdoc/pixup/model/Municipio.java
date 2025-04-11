@@ -6,20 +6,20 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Municipio extends Catalogo implements Serializable{
-    private String nombre;
+    private String nombreTabla = "Municipio";
 
     public Municipio()
     {
     }
 
-    public String getNombre()
+    public String getNombreTabla()
     {
-        return nombre;
+        return nombreTabla;
     }
 
-    public void setNombre(String nombre)
+    public void setNombreTabla(String nombre)
     {
-        this.nombre = nombre;
+        this.nombreTabla = nombre;
     }
 
     @Override
@@ -44,6 +44,11 @@ public class Municipio extends Catalogo implements Serializable{
         }
 
         return busqueda;
+    }
+
+    @Override
+    public Integer buscarById(Integer id) {
+        return 0;
     }
 }
 

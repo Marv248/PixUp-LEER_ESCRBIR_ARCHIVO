@@ -6,66 +6,83 @@ import org.gerdoc.pixup.model.Catalogos;
 import org.gerdoc.pixup.util.ReadUtil;
 
 import java.io.File;
+import java.util.List;
 
 public class ArtistaCatalogo extends Catalogos<Artista> {
 
-    public static ArtistaCatalogo artistaCatalogo;
-    private Artista artista = new Artista();
-    private ArtistaImpl artistaImpl = new ArtistaImpl();
+    private static ArtistaCatalogo artistaCatalogo = null;
+    private final ArtistaImpl artistaImpl = new ArtistaImpl();
 
-    private ArtistaCatalogo( )
-    {
-        super();
-    }
-
-    public static ArtistaCatalogo getInstance( )
-    {
-        if(artistaCatalogo ==null)
-        {
+    public static ArtistaCatalogo getInstance() {
+        if (artistaCatalogo == null) {
             artistaCatalogo = new ArtistaCatalogo();
         }
         return artistaCatalogo;
     }
 
     @Override
-    public Artista newT()
-    {
-        return new Artista( );
+    public Integer buscarIdEnBD(Integer id) {
+        return new Artista().buscarById(id);
     }
 
     @Override
-    public boolean processNewT(Artista artista)
-    {
-        System.out.println("Teclee un disco" );
-        artista.setNombre( ReadUtil.read( ) );
-        return true;
+    public Artista newT() {
+        return new Artista();
     }
 
     @Override
-    public void processEditT(Artista artista)
-    {
-        System.out.println("Id del artista: " + artista.getId( ) );
-        System.out.println("Artista a editar: " + artista.getNombre( ) );
-        System.out.println("Teclee el nombre nuevo del artista: " );
-        artista.setNombre( ReadUtil.read( ) );
+    public boolean processNewT(Artista artista) {
+        return artistaImpl.addRegistro(artista);
+    }
+
+    @Override
+    public void processEditT(Artista artista) {
+        // Aquí puedes implementar lógica de edición si lo deseas
     }
 
     @Override
     public void addRegistro() {
-        System.out.println("Introduzca el nombre del Artista:");
-        this.artista.setNombre(ReadUtil.read());
-        if(this.artista.buscar(artista.getNombre())){
-            System.out.println("Lo siento, el artista "+ artista.getNombre()+" ya existe \u2639");
+        getConnection();
+        try {
+            System.out.println("Introduzca el nombre del artista:");
+            String nombre = ReadUtil.read();
+
+            if (nombre == null || nombre.trim().isEmpty()) {
+                System.out.println("El nombre del artista no puede estar vacío.");
+                return;
+            }
+
+            Artista nuevoArtista = new Artista();
+            nuevoArtista.setNombre(nombre);
+
+            if (nuevoArtista.buscar(nombre)) {
+                System.out.println("Lo siento, el artista ingresado ya existe ☹");
+            } else {
+                if (artistaImpl.addRegistro(nuevoArtista)) {
+                    System.out.println("Artista agregado con éxito ✅");
+                } else {
+                    System.out.println("Hubo un problema al agregar el artista.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al agregar artista: " + e.getMessage());
+            e.printStackTrace();
         }
-        else {
-            artistaImpl.addRegistro(artista);
-            System.out.println("Registro realizado con exito!!!");
+    }
+
+
+    @Override
+    public void printAll() {
+        List<Artista> artistas = artistaImpl.findAll();
+        if (artistas.isEmpty()) {
+            System.out.println("No hay artistas registrados.");
+        } else {
+            artistas.forEach(System.out::println);
         }
     }
 
     @Override
-    public File getFile()
-    {
-        return new File( "./Artista.object");
+    public File getFile() {
+        return new File("artista.obj");
     }
 }

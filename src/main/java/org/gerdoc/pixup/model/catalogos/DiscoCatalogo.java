@@ -15,6 +15,11 @@ public class DiscoCatalogo extends Catalogos<Disco> {
     private Disco disco = new Disco();
     private DiscoImpl discoImpl = new DiscoImpl();
 
+    @Override
+    public Integer buscarIdEnBD(Integer id) {
+        return 0;
+    }
+
     private DiscoCatalogo( )
     {
         super();
@@ -63,6 +68,11 @@ public class DiscoCatalogo extends Catalogos<Disco> {
             discoImpl.addRegistro(disco);
             System.out.println("Registro realizado sin errores");
         }
+    }
+
+    @Override
+    public void printAll() {
+        discoImpl.findAll();
     }
 
     @Override

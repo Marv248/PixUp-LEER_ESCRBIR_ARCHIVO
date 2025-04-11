@@ -1,11 +1,14 @@
 package org.gerdoc.pixup.model.catalogos;
 
+import org.gerdoc.pixup.jdbc.Conexion;
 import org.gerdoc.pixup.jdbc.impl.EstadoJdbcImpl;
 import org.gerdoc.pixup.model.Catalogos;
 import org.gerdoc.pixup.model.Estado;
 import org.gerdoc.pixup.util.ReadUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EstadoCatalogo extends Catalogos<Estado>
 {
@@ -15,6 +18,12 @@ public class EstadoCatalogo extends Catalogos<Estado>
     private EstadoCatalogo( )
     {
         super();
+        this.conexion = new EstadoJdbcImpl();
+    }
+
+    @Override
+    public Integer buscarIdEnBD(Integer id) {
+        return new Estado().buscarById(id);
     }
 
     public static EstadoCatalogo getInstance( )
@@ -51,16 +60,39 @@ public class EstadoCatalogo extends Catalogos<Estado>
 
     @Override
     public void addRegistro() {
-        System.out.println("Introduzaca el nombre del estado: ");
-        estado.setNombre(ReadUtil.read());
-        if (estado.buscar(estado.getNombre())){
-            System.out.println("Lo siento, el estado ingresado ya existe \u2639");
+        getConnection();
+        try {
+            System.out.println("Introduzca el nombre del estado:");
+            String nombre = ReadUtil.read();
+
+            if (nombre == null || nombre.trim().isEmpty()) {
+                System.out.println("El nombre del estado no puede estar vacío.");
+                return;
+            }
+
+            Estado nuevoEstado = new Estado();
+            nuevoEstado.setNombre(nombre);
+
+            if (nuevoEstado.buscar(nombre)) {
+                System.out.println("Lo siento, el estado ingresado ya existe ☹");
+            } else {
+                if (estadoJdbc.addRegistro(nuevoEstado)) {
+                    System.out.println("Estado agregado con éxito ✅");
+                } else {
+                    System.out.println("Hubo un problema al agregar el estado.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al agregar estado: " + e.getMessage());
+            e.printStackTrace();
         }
-        else
-        {
-            estadoJdbc.addRegistro(estado);
-            System.out.println("Estado agregado con éxito");
-        }
+    }
+
+
+    @Override
+    public void printAll() {
+        getConnection();
+        estadoJdbc.findAll().forEach(System.out::println);
     }
 
     @Override
@@ -69,4 +101,8 @@ public class EstadoCatalogo extends Catalogos<Estado>
         return new File( "./Estado.object");
     }
 
+    @Override
+    public List<Estado> edit() {
+        return super.edit();
+    }
 }

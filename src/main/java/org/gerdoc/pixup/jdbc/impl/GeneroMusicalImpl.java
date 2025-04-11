@@ -69,6 +69,11 @@ public class GeneroMusicalImpl extends Conexion<GeneroMusical> implements Jdbc {
     }
 
     @Override
+    public List edit() {
+        return List.of();
+    }
+
+    @Override
     public boolean addRegistro(GeneroMusical generoMusical) {
         Statement statement = null;
         String sql = String.format("INSERT INTO tbl_genero_musical (ID, nombre) VALUES (%d, '%s')",
@@ -77,7 +82,6 @@ public class GeneroMusicalImpl extends Conexion<GeneroMusical> implements Jdbc {
         try {
             statement = connection.createStatement();
             int rowsInserted = statement.executeUpdate(sql);
-            closeConnection();
             return rowsInserted > 0;
         } catch (SQLException e) {
             e.printStackTrace();

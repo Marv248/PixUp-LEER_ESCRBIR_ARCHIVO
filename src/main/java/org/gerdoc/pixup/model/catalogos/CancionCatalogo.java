@@ -13,6 +13,11 @@ public class CancionCatalogo extends Catalogos<Cancion> {
     private Cancion cancion = new Cancion();
     private CancionImpl cancionImpl = new CancionImpl();
 
+    @Override
+    public Integer buscarIdEnBD(Integer id) {
+        return 0;
+    }
+
     private CancionCatalogo( )
     {
         super();
@@ -61,6 +66,11 @@ public class CancionCatalogo extends Catalogos<Cancion> {
             cancionImpl.addRegistro(cancion);
             System.out.println("Registro realizado de manera exitos");
         }
+    }
+
+    @Override
+    public void printAll() {
+        cancionImpl.findAll();
     }
 
     @Override

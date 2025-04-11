@@ -1,5 +1,6 @@
 package org.gerdoc.pixup.gui.consola;
 
+import org.gerdoc.pixup.jdbc.Conexion;
 import org.gerdoc.pixup.model.Catalogo;
 import org.gerdoc.pixup.model.Estado;
 import org.gerdoc.pixup.model.LecturaAccion;
@@ -8,7 +9,6 @@ import org.gerdoc.pixup.negocio.Ejecutable;
 
 public class ListaCatalogos extends LecturaAccion
 {
-    protected Catalogo tipo_catalogo;
 
     public static ListaCatalogos listaCatalogos;
     private ListaCatalogos()

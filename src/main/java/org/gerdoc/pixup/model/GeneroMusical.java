@@ -42,4 +42,9 @@ public class GeneroMusical extends Catalogo implements Serializable {
         }
         return busqueda;
     }
+
+    @Override
+    public Integer buscarById(Integer id) {
+        return 0;
+    }
 }

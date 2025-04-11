@@ -13,6 +13,11 @@ public class GeneroMusicalCatalogo extends Catalogos<GeneroMusical> {
     private GeneroMusical generoMusical= new GeneroMusical();
     private GeneroMusicalImpl generoMusicalImpl =new GeneroMusicalImpl();
 
+    @Override
+    public Integer buscarIdEnBD(Integer id) {
+        return 0;
+    }
+
     private GeneroMusicalCatalogo( )
     {
         super();
@@ -61,6 +66,11 @@ public class GeneroMusicalCatalogo extends Catalogos<GeneroMusical> {
             generoMusicalImpl.addRegistro(generoMusical);
             System.out.println("Registro realizado de manera exitosa");
         }
+    }
+
+    @Override
+    public void printAll() {
+        generoMusicalImpl.findAll();
     }
 
     @Override

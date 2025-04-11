@@ -14,6 +14,11 @@ public class ColoniaCatalogo extends Catalogos<Colonia> {
     private Colonia colonia = new Colonia();
     private ColoniaImp coloniaImp = new ColoniaImp();
 
+    @Override
+    public Integer buscarIdEnBD(Integer id) {
+        return 0;
+    }
+
     private ColoniaCatalogo( )
     {
         super();
@@ -62,6 +67,11 @@ public class ColoniaCatalogo extends Catalogos<Colonia> {
             coloniaImp.addRegistro(colonia);
             System.out.println("Colonia agregada con éxito");
         }
+    }
+
+    @Override
+    public void printAll() {
+        coloniaImp.findAll();
     }
 
     @Override

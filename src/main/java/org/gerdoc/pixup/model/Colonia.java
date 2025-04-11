@@ -44,4 +44,9 @@ public class Colonia extends Catalogo implements Serializable {
         if(!busqueda) System.out.println("Colonia no encontrada \u2339");
         return busqueda;
     }
+
+    @Override
+    public Integer buscarById(Integer id) {
+        return 0;
+    }
 }

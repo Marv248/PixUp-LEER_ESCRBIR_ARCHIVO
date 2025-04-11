@@ -3,6 +3,7 @@ package org.gerdoc.pixup.jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 
 public abstract class Conexion<T>
@@ -62,7 +63,7 @@ public abstract class Conexion<T>
 
     public boolean openConnection() {
         try {
-            if( connection == null ) {
+            if( connection == null || connection.isClosed()) {
                 if( !loadConnection( user, password, db, server ) ) {
                     return false;
                 }
@@ -70,6 +71,7 @@ public abstract class Conexion<T>
             return connection.isClosed();
         }
         catch (SQLException e) {
+            System.out.println(e);
             return true;
         }
     }
@@ -94,5 +96,17 @@ public abstract class Conexion<T>
         }
     }
 
+    public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                openConnection();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return connection;
+    }
+
     public abstract boolean addRegistro(T t);
+    public abstract List<T> findAll();
 }

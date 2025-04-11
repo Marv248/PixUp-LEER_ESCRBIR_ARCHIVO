@@ -69,6 +69,11 @@ public class CancionImpl extends Conexion<Cancion> implements Jdbc {
     }
 
     @Override
+    public List edit() {
+        return List.of();
+    }
+
+    @Override
     public boolean addRegistro(Cancion cancion) {
         Statement statement = null;
         String sql = String.format("INSERT INTO tbl_cancion (ID, nombre) VALUES (%d, '%s')",
@@ -77,7 +82,6 @@ public class CancionImpl extends Conexion<Cancion> implements Jdbc {
         try {
             statement = connection.createStatement();
             int rowsInserted = statement.executeUpdate(sql);
-            closeConnection();
             return rowsInserted > 0;
         } catch (SQLException e) {
             e.printStackTrace();

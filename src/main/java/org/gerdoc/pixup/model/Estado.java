@@ -7,7 +7,25 @@ import java.util.List;
 
 public class Estado extends Catalogo  implements Serializable
 {
-    private String nombre;
+    Estado estado;
+    String nombreTabla="tbl_estado";
+
+    public String getNombreTabla() {
+        return nombreTabla;
+    }
+
+    public void setNombreTabla(String nombreTabla) {
+        this.nombreTabla = nombreTabla;
+    }
+
+
+    @Override
+    public Catalogo getInstance() {
+        if(estado == null){
+            estado = new Estado();
+        }
+        return estado;
+    }
 
     public Estado()
     {
@@ -37,6 +55,25 @@ public class Estado extends Catalogo  implements Serializable
         }
         return busqueda;
     }
+
+    @Override
+    public Integer buscarById(Integer id) {
+        int i = -1;
+        EstadoJdbcImpl estadoImpl = new EstadoJdbcImpl();
+        List<Estado> estadoList = estadoImpl.findAll();
+
+        if (estadoList != null && !estadoList.isEmpty()) {
+            for (Estado estado : estadoList) {
+                if (estado.getId() != null && estado.getId().equals(id)) {
+                    i = id;
+                    break;
+                }
+            }
+        }
+        return i;
+    }
+
+
 
     @Override
     public String toString()

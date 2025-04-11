@@ -12,6 +12,11 @@ public class MunicipioCatalogo extends Catalogos <Municipio>{
     private Municipio municipio = new Municipio();
     private MunicipioImpl municipioImpl = new MunicipioImpl();
 
+    @Override
+    public Integer buscarIdEnBD(Integer id) {
+        return 0;
+    }
+
     private MunicipioCatalogo( )
     {
         super();
@@ -60,6 +65,11 @@ public class MunicipioCatalogo extends Catalogos <Municipio>{
             municipioImpl.addRegistro(municipio);
             System.out.println("Municipio agregado con éxito");
         }
+    }
+
+    @Override
+    public void printAll() {
+        municipioImpl.findAll();
     }
 
     @Override
