@@ -85,4 +85,9 @@ public class ArtistaCatalogo extends Catalogos<Artista> {
     public File getFile() {
         return new File("artista.obj");
     }
+
+    @Override
+    public List<Artista> delete() {
+        return super.delete();
+    }
 }

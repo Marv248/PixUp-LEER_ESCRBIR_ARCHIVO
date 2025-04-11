@@ -10,12 +10,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EstadoJdbcImpl extends Conexion<Estado> implements Jdbc
-{
+public class EstadoJdbcImpl extends Conexion<Estado> implements Jdbc {
     private static EstadoJdbcImpl estadoJdbc;
 
-    public EstadoJdbcImpl()
-    {
+    public EstadoJdbcImpl() {
         super( );
     }
 
@@ -97,5 +95,29 @@ public class EstadoJdbcImpl extends Conexion<Estado> implements Jdbc
             closeConnection();
         }
     }
+
+    public Estado findById(int id) {
+        getConnection();
+        String sql = "SELECT * FROM tbl_estado WHERE id = ?";
+        Estado estado = null;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    estado = new Estado();
+                    estado.setId(rs.getInt("id"));
+                    estado.setNombre(rs.getString("nombre"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+
+        return estado;
+    }
+
 
 }

@@ -19,8 +19,7 @@ public abstract class Conexion<T>
         openConnection();
     }
 
-    public boolean testDriver()
-    {
+    public boolean testDriver() {
         try
         {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();

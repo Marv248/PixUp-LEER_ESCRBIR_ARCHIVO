@@ -27,9 +27,7 @@ public class Estado extends Catalogo  implements Serializable
         return estado;
     }
 
-    public Estado()
-    {
-    }
+    public Estado() {}
 
     public String getNombre()
     {
@@ -80,6 +78,6 @@ public class Estado extends Catalogo  implements Serializable
     {
         return "Estado:\n" +
                 "\tid=" + id +
-                "\n\tNombre='" + nombre;
+                "\n\tNombre='" + nombre+"'";
     }
 }

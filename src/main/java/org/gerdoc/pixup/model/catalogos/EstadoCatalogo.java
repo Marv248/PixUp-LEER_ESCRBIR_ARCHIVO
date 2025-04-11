@@ -1,13 +1,11 @@
 package org.gerdoc.pixup.model.catalogos;
 
-import org.gerdoc.pixup.jdbc.Conexion;
 import org.gerdoc.pixup.jdbc.impl.EstadoJdbcImpl;
 import org.gerdoc.pixup.model.Catalogos;
 import org.gerdoc.pixup.model.Estado;
 import org.gerdoc.pixup.util.ReadUtil;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EstadoCatalogo extends Catalogos<Estado>
@@ -15,6 +13,7 @@ public class EstadoCatalogo extends Catalogos<Estado>
     public EstadoJdbcImpl estadoJdbc = new EstadoJdbcImpl();
     public static Estado estado = new Estado();
     public static EstadoCatalogo estadoCatalogo;
+
     private EstadoCatalogo( )
     {
         super();
@@ -104,5 +103,10 @@ public class EstadoCatalogo extends Catalogos<Estado>
     @Override
     public List<Estado> edit() {
         return super.edit();
+    }
+
+    @Override
+    public List<Estado> delete() {
+        return super.delete();
     }
 }

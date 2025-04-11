@@ -45,8 +45,12 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
     }
 
     protected void getConnection() {
-        if (connection == null) {
-            connection = conexion.getConnection();
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = conexion.getConnection();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -83,7 +87,6 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
 
         Catalogo catalogoT = (Catalogo) entidad;
 
-        getConnection();
         try {
             System.out.println("Introduzca el id a modificar: ");
             int id = ReadUtil.readInt();
@@ -122,7 +125,57 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
         return lista;
     }
 
+    public List<T> delete() {
+        getConnection();
+        List<T> lista = new ArrayList<>();
+        T entidad = newT();
 
+        if (!(entidad instanceof Catalogo)) {
+            System.out.println("El objeto no es una instancia válida de Catalogo.");
+            return lista;
+        }
+
+        Catalogo catalogoT = (Catalogo) entidad;
+
+        try {
+            System.out.println("Introduzca el ID del registro que desea eliminar:");
+            int id = ReadUtil.readInt();
+
+            Integer resultado = buscarIdEnBD(id);
+
+            if (resultado != null && resultado != -1) {
+                String nombreTabla = catalogoT.getNombreTabla();
+                String sql = "DELETE FROM " + nombreTabla + " WHERE id = ?";
+
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, id);
+
+                int filasEliminadas = preparedStatement.executeUpdate();
+                if (filasEliminadas > 0) {
+                    System.out.println("El registro fue eliminado exitosamente.");
+                    catalogoT.setId(id);
+                    lista.add((T) catalogoT);
+                } else {
+                    System.out.println("No se eliminó ninguna fila.");
+                }
+
+                preparedStatement.close();
+            } else {
+                System.out.println("No se encontró un registro con el ID proporcionado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar el registro: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return lista;
+    }
 
 
     public void remove( )
@@ -163,7 +216,7 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
                 edit();
                 break;
             case 3:
-                remove( );
+                delete( );
                 break;
             case 4:
                 printAll();
