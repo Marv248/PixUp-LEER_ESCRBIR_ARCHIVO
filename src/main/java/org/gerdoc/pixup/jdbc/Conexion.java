@@ -108,4 +108,6 @@ public abstract class Conexion<T>
 
     public abstract boolean addRegistro(T t);
     public abstract List<T> findAll();
+    public abstract boolean remover(Integer id);
+    public abstract boolean edit(Integer id);
 }

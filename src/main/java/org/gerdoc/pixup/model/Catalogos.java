@@ -176,34 +176,6 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
 
         return lista;
     }
-
-
-    public void remove( )
-    {
-        if( isListEmpty( ) )
-        {
-            System.out.println( "No hay elementos a remover" );
-            return;
-        }
-        flag2 = true;
-        while ( flag2 )
-        {
-            System.out.println( "Ingrese el id del elemento a borrar" );
-            print( );
-            t = list.stream().filter( e -> e.getId().equals( ReadUtil.readInt( ) ) ).findFirst().orElse( null );
-            if( t==null )
-            {
-                System.out.println( "Id incorrecto, intentelo nuevamente" );
-            }
-            else
-            {
-                list.remove( t );
-                flag2 = false;
-                System.out.println( "Elemento borrado" );
-            }
-        }
-    }
-
     @Override
     public void procesaOpcion()
     {
@@ -318,5 +290,4 @@ public abstract class Catalogos<T extends Catalogo> extends LecturaAccion
     {
         return 5;
     }
-
 }

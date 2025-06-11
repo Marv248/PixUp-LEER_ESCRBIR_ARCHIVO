@@ -4,6 +4,7 @@ import org.gerdoc.pixup.jdbc.Conexion;
 import org.gerdoc.pixup.jdbc.Jdbc;
 import org.gerdoc.pixup.model.Cancion;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -69,23 +70,46 @@ public class CancionImpl extends Conexion<Cancion> implements Jdbc {
     }
 
     @Override
-    public List edit() {
-        return List.of();
+    public boolean remover(Integer id) {
+        return false;
+    }
+
+    @Override
+    public boolean edit(Integer id) {
+        return false;
     }
 
     @Override
     public boolean addRegistro(Cancion cancion) {
-        Statement statement = null;
-        String sql = String.format("INSERT INTO tbl_cancion (ID, nombre) VALUES (%d, '%s')",
-                cancion.getId(), cancion.getNombre());
+        openConnection();
+
+        if (cancion == null || cancion.getNombre() == null || cancion.getNombre().trim().isEmpty()) {
+            System.out.println("La cancion proporcionado no es válido.");
+            return false;
+        }
+
+        String sql = "INSERT INTO tbl_cancion (nombre) VALUES (?)";
+        PreparedStatement preparedStatement = null;
 
         try {
-            statement = connection.createStatement();
-            int rowsInserted = statement.executeUpdate(sql);
-            return rowsInserted > 0;
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, cancion.getNombre());
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("La cancion se ha agregado correctamente.");
+                return true;
+            } else {
+                System.out.println("⚠ No se insertó ningún registro.");
+                return false;
+            }
         } catch (SQLException e) {
+            System.out.println("Error al agregar la cancion: " + e.getMessage());
             e.printStackTrace();
             return false;
+        } finally {
+            closeConnection();
         }
     }
 }

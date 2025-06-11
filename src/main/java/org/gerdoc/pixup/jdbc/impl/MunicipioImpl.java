@@ -63,6 +63,16 @@ public class MunicipioImpl extends Conexion<Municipio> implements Jdbc {
         return municipioList;
     }
 
+    @Override
+    public boolean remover(Integer id) {
+        return false;
+    }
+
+    @Override
+    public boolean edit(Integer id) {
+        return false;
+    }
+
 
     @Override
     public boolean addRegistro(Municipio municipio) {
@@ -95,10 +105,5 @@ public class MunicipioImpl extends Conexion<Municipio> implements Jdbc {
         } finally {
             closeConnection();
         }
-    }
-
-    @Override
-    public List<Municipio> edit() {
-        return List.of();
     }
 }

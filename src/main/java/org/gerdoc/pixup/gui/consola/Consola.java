@@ -1,28 +1,19 @@
 package org.gerdoc.pixup.gui.consola;
-
 import org.gerdoc.pixup.model.LecturaAccion;
 import org.gerdoc.pixup.negocio.Ejecutable;
-
-public class Consola extends LecturaAccion
-{
+public class Consola extends LecturaAccion {
     private static Consola consola;
+    private Consola() {}
 
-    private Consola()
-    {
-    }
-
-    public static Consola getInstance( )
-    {
-        if(consola==null)
-        {
+    public static Consola getInstance( ) {
+        if(consola==null) {
             consola = new Consola();
         }
         return consola;
     }
 
     @Override
-    public void despliegaMenu()
-    {
+    public void despliegaMenu() {
         System.out.println("Seleccione una opcion:");
         System.out.println("1.-Catálogos");
         System.out.println("2.-Salir");
@@ -41,8 +32,7 @@ public class Consola extends LecturaAccion
     }
 
     @Override
-    public void procesaOpcion()
-    {
+    public void procesaOpcion() {
         Ejecutable ejecutable = null;
         System.out.println("Opcion: " + opcion);
         if(opcion==1)
@@ -52,5 +42,4 @@ public class Consola extends LecturaAccion
         ejecutable.setFlag( true );
         ejecutable.run( );
     }
-
 }

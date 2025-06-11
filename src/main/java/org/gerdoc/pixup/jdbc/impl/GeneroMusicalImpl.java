@@ -4,6 +4,7 @@ import org.gerdoc.pixup.jdbc.Conexion;
 import org.gerdoc.pixup.jdbc.Jdbc;
 import org.gerdoc.pixup.model.GeneroMusical;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,31 +32,21 @@ public class GeneroMusicalImpl extends Conexion<GeneroMusical> implements Jdbc {
     @Override
     public List<GeneroMusical> findAll()
     {
+        getConnection();
         Statement statement = null;
         ResultSet resultSet = null;
         ArrayList<GeneroMusical> list = null;
         GeneroMusical generoMusical = null;
         String sql ="Select * from tbl_genero_musical";
-
-
         try
         {
-            if( openConnection() )
-            {
-                return null;
-            }
             statement = connection.createStatement();
             resultSet = statement.executeQuery( sql );
-            if( resultSet == null )
-            {
-                return null;
-            }
             list =  new ArrayList<GeneroMusical>( );
             while( resultSet.next( ) )
             {
                 generoMusical = new GeneroMusical();
-                generoMusical.setId( resultSet.getInt( "ID" ) );
-                generoMusical.setNombre( resultSet.getString( "nombre" ) );
+                generoMusical.setId( resultSet.getInt( "id" ) );
                 list.add( generoMusical );
             }
             resultSet.close( );
@@ -69,23 +60,47 @@ public class GeneroMusicalImpl extends Conexion<GeneroMusical> implements Jdbc {
     }
 
     @Override
-    public List edit() {
-        return List.of();
+    public boolean remover(Integer id) {
+        return false;
     }
 
     @Override
+    public boolean edit(Integer id) {
+        return false;
+    }
+
+
+    @Override
     public boolean addRegistro(GeneroMusical generoMusical) {
-        Statement statement = null;
-        String sql = String.format("INSERT INTO tbl_genero_musical (ID, nombre) VALUES (%d, '%s')",
-                generoMusical.getId(), generoMusical.getNombre());
+        getConnection();
+
+        if (generoMusical == null || generoMusical.getNombre() == null || generoMusical.getNombre().trim().isEmpty()) {
+            System.out.println("El generoMusical proporcionado no es válido.");
+            return false;
+        }
+
+        String sql = "INSERT INTO tbl_genero_musical (descripcion) VALUES (?)";
+        PreparedStatement preparedStatement = null;
 
         try {
-            statement = connection.createStatement();
-            int rowsInserted = statement.executeUpdate(sql);
-            return rowsInserted > 0;
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, generoMusical.getNombre());
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("El generoMusical se ha agregado correctamente.");
+                return true;
+            } else {
+                System.out.println("⚠ No se insertó ningún registro.");
+                return false;
+            }
         } catch (SQLException e) {
+            System.out.println("Error al agregar el generoMusical: " + e.getMessage());
             e.printStackTrace();
             return false;
+        } finally {
+            closeConnection();
         }
     }
 }

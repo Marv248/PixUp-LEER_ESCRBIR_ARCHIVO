@@ -4,6 +4,7 @@ import org.gerdoc.pixup.jdbc.Conexion;
 import org.gerdoc.pixup.jdbc.Jdbc;
 import org.gerdoc.pixup.model.Disco;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -69,23 +70,46 @@ public class DiscoImpl extends Conexion<Disco> implements Jdbc {
     }
 
     @Override
-    public List edit() {
-        return List.of();
+    public boolean remover(Integer id) {
+        return false;
+    }
+
+    @Override
+    public boolean edit(Integer id) {
+        return false;
     }
 
     @Override
     public boolean addRegistro(Disco disco) {
-        Statement statement = null;
-        String sql = String.format("INSERT INTO tbl_disco (ID, nombre) VALUES (%d, '%s')",
-                disco.getId(), disco.getNombre());
+        openConnection();
+
+        if (disco == null || disco.getNombre() == null || disco.getNombre().trim().isEmpty()) {
+            System.out.println("El disco proporcionado no es válido.");
+            return false;
+        }
+
+        String sql = "INSERT INTO tbl_disco (nombre) VALUES (?)";
+        PreparedStatement preparedStatement = null;
 
         try {
-            statement = connection.createStatement();
-            int rowsInserted = statement.executeUpdate(sql);
-            return rowsInserted > 0;
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, disco.getNombre());
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("El disco se ha agregado correctamente.");
+                return true;
+            } else {
+                System.out.println("⚠ No se insertó ningún registro.");
+                return false;
+            }
         } catch (SQLException e) {
+            System.out.println("Error al agregar el disco: " + e.getMessage());
             e.printStackTrace();
             return false;
+        } finally {
+            closeConnection();
         }
     }
 }

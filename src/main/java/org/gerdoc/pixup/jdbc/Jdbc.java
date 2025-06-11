@@ -7,5 +7,4 @@ import java.util.List;
 public interface Jdbc<T>
 {
     List<T> findAll( );
-    List<T> edit();
 }

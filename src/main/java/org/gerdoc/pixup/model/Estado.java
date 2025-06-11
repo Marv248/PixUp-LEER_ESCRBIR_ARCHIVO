@@ -1,12 +1,9 @@
 package org.gerdoc.pixup.model;
-
 import org.gerdoc.pixup.jdbc.impl.EstadoJdbcImpl;
-
 import java.io.Serializable;
 import java.util.List;
 
-public class Estado extends Catalogo  implements Serializable
-{
+public class Estado extends Catalogo  implements Serializable {
     Estado estado;
     String nombreTabla="tbl_estado";
 
@@ -70,8 +67,6 @@ public class Estado extends Catalogo  implements Serializable
         }
         return i;
     }
-
-
 
     @Override
     public String toString()

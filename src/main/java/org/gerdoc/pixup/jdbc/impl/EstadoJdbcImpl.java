@@ -55,16 +55,92 @@ public class EstadoJdbcImpl extends Conexion<Estado> implements Jdbc {
         return list;
     }
 
-
-
     @Override
-    public List edit() {
-        return List.of();
+    public boolean remover(Integer id) {
+        if (id == null || id <= 0) {
+            System.out.println("ID inválido.");
+            return false;
+        }
+
+        getConnection();
+        boolean removed = false;
+        String sql = "DELETE FROM tbl_estado WHERE id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int rowsAffected = ps.executeUpdate();
+            removed = rowsAffected > 0;
+
+            if (removed) {
+                System.out.println("Estado con ID " + id + " ha sido eliminado correctamente.");
+            } else {
+                System.out.println("No se encontró estado con ID " + id + ".");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar el estado: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+        return removed;
     }
 
     @Override
-    public boolean addRegistro(Estado estado) {
+    public boolean edit(Integer id) {
+        List<Estado> estados = findAll();
+
+        if (estados == null || estados.isEmpty()) {
+            System.out.println("No hay estados registrados aún.");
+            return false;
+        }
+
+        System.out.println("Estados registrados:");
+        for (Estado estado : estados) {
+            System.out.println("- ID: " + estado.getId() + " | Nombre: " + estado.getNombre());
+        }
+
+        if (id == null || id <= 0) {
+            System.out.println("ID inválido.");
+            return false;
+        }
+
+        System.out.print("Introduzca el nuevo nombre del estado: ");
+        String nuevoNombre = ReadUtil.read();
+
+        if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
+            System.out.println("El nombre no puede estar vacío.");
+            return false;
+        }
+
         getConnection();
+        String sql = "UPDATE tbl_estado SET nombre = ? WHERE id = ?";
+        boolean updated = false;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, nuevoNombre.trim());
+            ps.setInt(2, id);
+
+            int rowsAffected = ps.executeUpdate();
+            updated = rowsAffected > 0;
+
+            if (updated) {
+                System.out.println("Estado con ID " + id + " actualizado a '" + nuevoNombre + "'");
+            } else {
+                System.out.println("No se encontró el estado con ID " + id);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al editar el estado: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+        return updated;
+    }
+
+
+    @Override
+    public boolean addRegistro(Estado estado) {
+        openConnection();
 
         if (estado == null || estado.getNombre() == null || estado.getNombre().trim().isEmpty()) {
             System.out.println("El estado proporcionado no es válido.");
@@ -118,6 +194,4 @@ public class EstadoJdbcImpl extends Conexion<Estado> implements Jdbc {
 
         return estado;
     }
-
-
 }

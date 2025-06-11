@@ -5,6 +5,7 @@ import org.gerdoc.pixup.jdbc.Jdbc;
 import org.gerdoc.pixup.model.Colonia;
 import org.gerdoc.pixup.model.Estado;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -64,23 +65,46 @@ public class ColoniaImp extends Conexion<Colonia> implements Jdbc {
     }
 
     @Override
-    public List edit() {
-        return List.of();
+    public boolean remover(Integer id) {
+        return false;
+    }
+
+    @Override
+    public boolean edit(Integer id) {
+        return false;
     }
 
     @Override
     public boolean addRegistro(Colonia colonia) {
-        Statement statement = null;
-        String sql = String.format("INSERT INTO tbl_colonia (ID, nombre) VALUES (%d, '%s')",
-                colonia.getId(), colonia.getNombre());
+        openConnection();
+
+        if (colonia == null || colonia.getNombre() == null || colonia.getNombre().trim().isEmpty()) {
+            System.out.println("La colonia proporcionado no es válido.");
+            return false;
+        }
+
+        String sql = "INSERT INTO tbl_colonia (nombre) VALUES (?)";
+        PreparedStatement preparedStatement = null;
 
         try {
-            statement = connection.createStatement();
-            int rowsInserted = statement.executeUpdate(sql);
-            return rowsInserted > 0;
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, colonia.getNombre());
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("La colonia se ha agregado correctamente.");
+                return true;
+            } else {
+                System.out.println("⚠ No se insertó ningún registro.");
+                return false;
+            }
         } catch (SQLException e) {
+            System.out.println("Error al agregar la colonia: " + e.getMessage());
             e.printStackTrace();
             return false;
+        } finally {
+            closeConnection();
         }
     }
 }

@@ -1,17 +1,20 @@
 package org.gerdoc.pixup.model.catalogos;
 
+import jdk.dynalink.linker.LinkerServices;
 import org.gerdoc.pixup.jdbc.impl.GeneroMusicalImpl;
 import org.gerdoc.pixup.model.Catalogos;
 import org.gerdoc.pixup.model.GeneroMusical;
 import org.gerdoc.pixup.util.ReadUtil;
 
 import java.io.File;
+import java.util.List;
 
 public class GeneroMusicalCatalogo extends Catalogos<GeneroMusical> {
 
     public static GeneroMusicalCatalogo generoMusicalCatalogo;
     private GeneroMusical generoMusical= new GeneroMusical();
     private GeneroMusicalImpl generoMusicalImpl =new GeneroMusicalImpl();
+    private List<GeneroMusical> generos;
 
     @Override
     public Integer buscarIdEnBD(Integer id) {
@@ -57,20 +60,17 @@ public class GeneroMusicalCatalogo extends Catalogos<GeneroMusical> {
 
     @Override
     public void addRegistro() {
-        System.out.println("Introduzca el nombre del género musical.");
-        this.generoMusical.setNombre(ReadUtil.read());
-        if(generoMusical.buscar(generoMusical.getNombre())){
-            System.out.println("Lo siento, el genero "+generoMusical.getNombre()+" ya existe \u2639");
-        }
-        else {
-            generoMusicalImpl.addRegistro(generoMusical);
-            System.out.println("Registro realizado de manera exitosa");
-        }
+        System.out.println("Introduzca el nombre del género músical:");
+        generoMusical.setNombre(ReadUtil.read());
+        generoMusicalImpl.  addRegistro(generoMusical);
     }
 
     @Override
     public void printAll() {
-        generoMusicalImpl.findAll();
+        generos = generoMusicalImpl.findAll();
+        for(GeneroMusical generoMusical1 : generos){
+            System.out.println(generoMusical1.getId()+"] " + generoMusical1.getNombre());
+        }
     }
 
     @Override

@@ -1,32 +1,22 @@
 package org.gerdoc.pixup.gui.consola;
-
-import org.gerdoc.pixup.jdbc.Conexion;
-import org.gerdoc.pixup.model.Catalogo;
-import org.gerdoc.pixup.model.Estado;
 import org.gerdoc.pixup.model.LecturaAccion;
 import org.gerdoc.pixup.model.catalogos.*;
 import org.gerdoc.pixup.negocio.Ejecutable;
 
-public class ListaCatalogos extends LecturaAccion
-{
+public class ListaCatalogos extends LecturaAccion {
 
     public static ListaCatalogos listaCatalogos;
-    private ListaCatalogos()
-    {
-    }
+    private ListaCatalogos() {}
 
-    public static ListaCatalogos getInstance( )
-    {
-        if(listaCatalogos==null)
-        {
+    public static ListaCatalogos getInstance( ) {
+        if(listaCatalogos==null) {
             listaCatalogos = new ListaCatalogos();
         }
         return listaCatalogos;
     }
 
     @Override
-    public void despliegaMenu()
-    {
+    public void despliegaMenu() {
         System.out.println( "Seleccione una opcion:" );
         System.out.println( "1.-Estado");
         System.out.println( "2.-Municipio");
@@ -51,8 +41,7 @@ public class ListaCatalogos extends LecturaAccion
     }
 
     @Override
-    public void procesaOpcion()
-    {
+    public void procesaOpcion() {
         Ejecutable ejecutable = null;
         switch (opcion) {
             case 1:
@@ -83,11 +72,9 @@ public class ListaCatalogos extends LecturaAccion
                 System.out.println("Opción incorrecta");
                 return;
         }
-        if(ejecutable!=null)
-        {
+        if(ejecutable!=null) {
             ejecutable.setFlag(true);
             ejecutable.run();
         }
-
     }
 }
